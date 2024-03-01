@@ -1,21 +1,24 @@
 resource "azurerm_virtual_network_peering" "spoke_to_hub" {
   provider                      = azurerm.spoke
-  name                          = var.spoke_to_hub != null ? [var.spoke_to_hub] : []
-  resource_group_name           = var.resource_group_name
-  virtual_network_name          = azurerm_virtual_network.vnet.name
-  remote_virtual_network_id     = var.hub_vnet_id != null ? [var.hub_vnet_id] : []
-  allow_virtual_network_access  = true
-  allow_forwarded_traffic       = true
-  depends_on                    = [azurerm_subnet.subnet_for_each]
+  name                          = var.spoke_to_hub
+  resource_group_name           = var.spoke_rg_name
+  virtual_network_name          = var.spoke_vnet_name
+  remote_virtual_network_id     = var.hub_vnet_id
+  allow_virtual_network_access  = var.allow_virtual_network_access
+  allow_forwarded_traffic       = var.allow_forwarded_traffic
+  allow_gateway_transit         = var.allow_gateway_transit
+  usre_remote_gateways          = var.use_remote_gateways
 }
 
 resource "azurerm_virtual_network_peering" "hub_to_spoke" { 
   provider                      = azurerm.hub
-  name                          = var.hub_to_spoke   != null ? [var.hub_to_spoke] : []
-  resource_group_name           = var.hub_rg_name    != null ? [var.hub_rg_name] : []
-  virtual_network_name          = var.hub_vnet_id    != null ? [var.hub_vnet_id] : []
-  remote_virtual_network_id     = azurerm_virtual_network.myvnet.id
-  allow_virtual_network_access  = true
-  allow_forwarded_traffic       = true
+  name                          = var.hub_to_spoke   
+  resource_group_name           = var.hub_rg_name
+  virtual_network_name          = var.hub_vnet_name 
+  remote_virtual_network_id     = var.spoke_vnet_id
+  allow_virtual_network_access  = var.allow_virtual_network_access
+  allow_forwarded_traffic       = var.allow_forwarded_traffic
+  allow_gateway_transit         = var.allow_gateway_transit
+  usre_remote_gateways          = var.use_remote_gateways
   depends_on                    = [azurerm_virtual_network_peering.spoke_to_hub]
 }
