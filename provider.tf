@@ -11,13 +11,9 @@ terraform {
 
 provider "azurerm" {
   alias           = "hub"
-  subscription_id = "000-000-000"
-  tenant_id       = "000-000-000"
   features {}
 }
 provider "azurerm" {
   alias           = "spoke"
-  subscription_id = "000-000-000"
-  tenant_id       = "000-000-000"
   features {}
 }
